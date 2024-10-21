@@ -19,7 +19,7 @@ public abstract class AbsBasePage extends AbsCommon {
         logger.trace("Exiting the AbsBasePage constructor");
     }
 
-    @Step("Открыть страницу")
+    @Step("Open the page")
     public void open() {
         logger.trace("Invoke of the open method");
         webDriver.get(BASE_URL + PATH);

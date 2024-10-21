@@ -1,6 +1,8 @@
 package pages;
 
+import enums.Field;
 import enums.LangLevel;
+import exceptions.NoSuchFieldException;
 import exceptions.NoSuchLangLevelException;
 import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
@@ -32,52 +34,50 @@ public class RegistrationPage extends AbsBasePage {
         super(webDriver, "/form.html");
     }
 
-    @Step("Заполнить поле с именем")
-    public RegistrationPage fillInNameField(String values) {
-        logger.trace("Invoke of the fillInNameField method");
-        fieldElements.get(0).sendKeys(values);
-        logger.trace("Exiting the fillInNameField method");
+    @Step("Fill in the {field} field")
+    public RegistrationPage fillInField(Field field, String values) { // специально делаю не(!) через шаблонный локатор, так как в противном случае каждый элемент будет вызываться отдельно через файндЭлемент(), а я хочу получить сразу все поля-элементы в Лист-е
+        logger.trace("Invoke of the fillInField method");
+        int fieldNumber;
+        switch (field) {
+            case NAME:
+                fieldNumber = 0;
+                break;
+            case EMAIL:
+                fieldNumber = 1;
+                break;
+            case PASSWORD:
+                fieldNumber = 2;
+                break;
+            case CONFIRM_PASSWORD:
+                fieldNumber = 3;
+                break;
+            case BIRTHDATE:
+                fieldNumber = 4;
+                break;
+            default:
+                throw new NoSuchFieldException();
+        }
+        fieldElements.get(fieldNumber).sendKeys(values);
+        logger.trace("Exiting the fillInField method");
         return this;
     }
 
-    @Step("Заполнить поле с почтой")
-    public RegistrationPage fillInEmailField(String values) {
-        logger.trace("Invoke of the fillInEmailField method");
-        fieldElements.get(1).sendKeys(values);
-        logger.trace("Exiting the fillInEmailField method");
+    @Step("Check whether password and confirm_password are equal")
+    public RegistrationPage checkPasswordAndConfirmAreEqual() {
+        logger.trace("Invoke of the checkPasswordAndConfirmAreEqual method");
+        Assertions.assertEquals(fieldElements.get(2).getAttribute("value"), fieldElements.get(3).getAttribute("value"), "Passwords are not equal");
+        logger.trace("Exiting the checkPasswordAndConfirmAreEqual method");
         return this;
     }
 
-    @Step("Заполнить поле с паролем")
-    public RegistrationPage fillInPasswordField(String values) {
-        logger.trace("Invoke of the fillInPasswordField method");
-        fieldElements.get(2).sendKeys(values);
-        logger.trace("Exiting the fillInPasswordField method");
-        return this;
-    }
-
-    @Step("Заполнить поле подтверждения пароля")
-    public RegistrationPage fillInAndCheckConfirmPasswordField(String values) {
-        logger.trace("Invoke of the fillInConfirmPasswordField method");
-        fieldElements.get(3).sendKeys(values);
-        Assertions.assertEquals(fieldElements.get(2).getAttribute("value"), fieldElements.get(3).getAttribute("value"), "Пароли не совпадают");
-        logger.trace("Exiting the fillInConfirmPasswordField method");
-        return this;
-    }
-
-    @Step("Внести дату в поле с календарем")
-    public RegistrationPage fillInBirthdateField(String values) {
-        logger.trace("Invoke of the fillInBirthdateField method");
-        fieldElements.get(4).sendKeys(values);
-        logger.trace("Exiting the fillInBirthdateField method");
-        return this;
-    }
-
-    @Step("Выбрать уровень знания языка")
-    public RegistrationPage chooseLangLevel(LangLevel langLevel) {
-        logger.trace("Invoke of the chooseLangLevel method");
-        langSelectionElement.click(); // до клика не проверяю, так как нет необходимости - isDisplayed еще до клика возвращает true - как будто поп-ап с уровнями уже открыт
-        Assertions.assertTrue(waiters.checkVisibility(langLevelElements.get(0)), "Поп-ап не открылся");
+    @Step("Select the language level")
+    public RegistrationPage selectLangLevel(LangLevel langLevel) {
+        logger.trace("Invoke of the selectLangLevel method");
+        Assertions.assertTrue(langLevelElements.get(0).isSelected(), "Selection is already made"); // проверяю, что изначально выбран пункт "Не выбран"
+        langSelectionElement.click(); // до клика не проверяю что поа-ап открыт или нет, так как это невозможно в силу того что данному поп-апу нет соответствующего отдельного элемента в доме
+        for (WebElement element: langLevelElements) {
+            Assertions.assertTrue(waiters.checkVisibility(element), "All selections are not shown"); // поэтому после клика проверяю, что просто все уровни знания языка отображаются в UI. Кстати, до клика они тоже все отображаются, то есть isDisplayed на все элементы возвращает true
+        }
         int levelNumber;
         switch (langLevel) {
             case NOT_SELECTED:
@@ -98,31 +98,30 @@ public class RegistrationPage extends AbsBasePage {
             default:
                 throw new NoSuchLangLevelException();
         }
-        Assertions.assertTrue(langLevelElements.get(0).isSelected()); // проверяю, что изначально уровень не выбран
         langLevelElements.get(levelNumber).click();
-        Assertions.assertTrue(langLevelElements.get(levelNumber).isSelected(), "Выбор не сохранился"); // проверяю, что мой выбор сохранился, но без вейтера, так как выбор происходит моментально
-        logger.trace("Exiting the chooseLangLevel method");
+        Assertions.assertTrue(langLevelElements.get(levelNumber).isSelected(), "Level has not been selected"); // проверяю, что мой выбор сохранился, но без вейтера, так как выбор происходит моментально
+        logger.trace("Exiting the selectLangLevel method");
         return this;
     }
 
-    @Step("Нажать кнопку \"Зарегистрироваться\"")
+    @Step("Click the \"Sign up\" button")
     public RegistrationPage clickRegButton() {
         logger.trace("Invoke of the clickRegButton method");
-        Assertions.assertFalse(outputElement.isDisplayed(), "Данные видны, а не должны"); // проверяю, что данных нет, но без вейтеров, так как нет необходимости в вейтерах
+        Assertions.assertFalse(outputElement.isDisplayed(), "Output should not be shown"); // проверяю, что данных нет, но без вейтеров, так как нет необходимости в вейтерах
         registerButtonElement.click();
-        Assertions.assertTrue(waiters.checkVisibility(outputElement), "Данные не видны, а должны быть видны");
+        Assertions.assertTrue(waiters.checkVisibility(outputElement), "Output is not shown");
         logger.trace("Exiting the clickRegButton method");
         return this;
     }
 
-    @Step("Проверка совпадения данных")
+    @Step("Check the output")
     public void assertOutput(String name, String email, String birthdate, String langLevel) {
         logger.trace("Invoke of the assertOutput method");
         Assertions.assertEquals(String.format(
                 "Имя пользователя: %s\n" +
                         "Электронная почта: %s\n" +
                         "Дата рождения: %s\n" +
-                        "Уровень языка: %s", name, email, birthdate, langLevel), outputElement.getText(), "Данные не совпадают");
+                        "Уровень языка: %s", name, email, birthdate, langLevel), outputElement.getText(), "Output is not correct");
         logger.trace("Exiting the assertOutput method");
     }
 }
