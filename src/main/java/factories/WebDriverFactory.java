@@ -20,7 +20,7 @@ public class WebDriverFactory {
     public WebDriver getDriver() {
         logger.trace("Invoke of the getDriver method");
         WebDriver webDriver;
-        switch (BROWSER_NAME) {
+        switch (BROWSER_NAME.trim().toLowerCase()) {
             case "chrome":
                 webDriver = new ChromeDriver(new ChromeSetting().configureMode());
                 break;

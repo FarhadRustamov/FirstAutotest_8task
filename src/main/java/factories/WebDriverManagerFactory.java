@@ -13,7 +13,7 @@ public class WebDriverManagerFactory {
 
     public void getWebDriverManager() {
         logger.trace("Invoke of the getWebDriverManager method");
-        switch (BROWSER_NAME) {
+        switch (BROWSER_NAME.trim().toLowerCase()) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
                 break;
