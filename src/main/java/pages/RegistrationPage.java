@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class RegistrationPage extends AbsBasePage {
                 throw new NoSuchLangLevelException();
         }
         langLevelElements.get(levelNumber).click();
-        Assertions.assertTrue(langLevelElements.get(levelNumber).isSelected(), "Level has not been selected"); // проверяю, что мой выбор сохранился, но без вейтера, так как выбор происходит моментально
+        Assertions.assertTrue(waiters.waitForCondition(ExpectedConditions.elementToBeSelected(langLevelElements.get(levelNumber))), "Level has not been selected");
         logger.trace("Exiting the selectLangLevel method");
         return this;
     }
