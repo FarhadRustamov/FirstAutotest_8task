@@ -14,6 +14,7 @@ import pages.RegistrationPage;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+
 @ExtendWith(Extensions.class)
 public class Form_Test {
 
@@ -40,8 +41,9 @@ public class Form_Test {
         LocalDate birthdate = LocalDate.now();
         LangLevel langLevel = LangLevel.NATIVE;
 
-        registrationPage.open();
-        registrationPage.fillInField(Field.NAME, name)
+        registrationPage
+                .open()
+                .fillInField(Field.NAME, name)
                 .fillInField(Field.EMAIL, email)
                 .fillInField(Field.PASSWORD, password)
                 .fillInField(Field.CONFIRM_PASSWORD, password)

@@ -6,9 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
-public abstract class AbsBasePage extends AbsCommon {
 
-    private final String BASE_URL = System.getProperty("base.url", "https://otus.home.kartushin.su");
+public abstract class AbsBasePage<T> extends AbsCommon {
+
+    private String BASE_URL = System.getProperty("base.url", "https://otus.home.kartushin.su");
     private final String PATH;
     private final Logger logger = LogManager.getLogger(AbsBasePage.class);
 
@@ -20,9 +21,11 @@ public abstract class AbsBasePage extends AbsCommon {
     }
 
     @Step("Open the page")
-    public void open() {
+    public T open() {
         logger.trace("Invoke of the open method");
+        BASE_URL = BASE_URL.endsWith("/") ? BASE_URL.substring(0, BASE_URL.length() - 1) : BASE_URL;
         webDriver.get(BASE_URL + PATH);
         logger.trace("Exiting the open method");
+        return (T) this;
     }
 }

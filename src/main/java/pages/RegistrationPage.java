@@ -16,7 +16,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 
 
-public class RegistrationPage extends AbsBasePage {
+public class RegistrationPage extends AbsBasePage<RegistrationPage> {
 
     private final Logger logger = LogManager.getLogger(RegistrationPage.class);
 
