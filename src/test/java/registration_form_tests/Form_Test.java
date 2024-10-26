@@ -39,7 +39,7 @@ public class Form_Test {
         String email = registrationPage.getFaker().internet().emailAddress();
         String password = registrationPage.getFaker().internet().password();
         LocalDate birthdate = LocalDate.now();
-        LangLevel langLevel = LangLevel.NATIVE;
+        LangLevel langLevel = registrationPage.getFaker().options().option(LangLevel.values());
 
         registrationPage
                 .open()
