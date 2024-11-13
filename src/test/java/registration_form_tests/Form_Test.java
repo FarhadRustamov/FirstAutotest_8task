@@ -48,7 +48,7 @@ public class Form_Test {
                 .fillInField(Field.PASSWORD, password)
                 .fillInField(Field.CONFIRM_PASSWORD, password)
                 .checkPasswordAndConfirmAreEqual()
-                .fillInField(Field.BIRTHDATE, DateTimeFormatter.ofPattern("dd-MM-yyyy").format(birthdate))
+                .fillInField(Field.BIRTHDATE, DateTimeFormatter.ofPattern("MM-dd-yyyy").format(birthdate))
                 .selectLangLevel(langLevel)
                 .clickRegButton()
                 .assertOutput(name, email, birthdate.toString(), langLevel.toString().toLowerCase());
