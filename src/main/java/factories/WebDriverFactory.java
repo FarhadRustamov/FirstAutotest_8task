@@ -1,7 +1,6 @@
 package factories;
 
 import exceptions.BrowserNotSupportedException;
-import exceptions.NoSuchExecutionEnvException;
 import implementations.ChromeSetting;
 import implementations.EdgeSetting;
 import implementations.FirefoxSetting;
@@ -22,22 +21,15 @@ public class WebDriverFactory {
 
     private final Logger logger = LogManager.getLogger(WebDriverFactory.class);
     private final String BROWSER_NAME = System.getProperty("browser", "chrome");
-    private final String EXECUTION_ENV = System.getProperty("executionEnv", "remote");
     private final String REMOTE_SERVER_URL = System.getProperty("remoteServerUrl", "http://193.104.57.173/wd/hub");
 
     public WebDriver getDriver() {
         logger.trace("Invoke of the getDriver method");
         WebDriver webDriver;
-        switch (EXECUTION_ENV) {
-            case "local":
-                webDriver = getLocalDriver();
-                break;
-            case "remote":
-                webDriver = getRemoteDriver();
-                break;
-            default:
-                logger.trace("Exiting the getDriver method");
-                throw new NoSuchExecutionEnvException();
+        if (REMOTE_SERVER_URL.isEmpty()) {
+            webDriver = getLocalDriver();
+        } else {
+            webDriver = getRemoteDriver();
         }
         logger.trace("Exiting the getDriver method");
         return webDriver;
