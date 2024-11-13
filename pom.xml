@@ -44,8 +44,11 @@
                     <systemPropertyVariables>
                         <base.url>https://otus.home.kartushin.su</base.url>
                         <browser>chrome</browser>
+                        <browser.version>124.0</browser.version>
                         <mode>maximized</mode>
                         <waiter.timeout>5</waiter.timeout>
+                        <executionEnv>remote</executionEnv>
+                        <remoteServerUrl>http://193.104.57.173/wd/hub</remoteServerUrl>
                     </systemPropertyVariables>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
