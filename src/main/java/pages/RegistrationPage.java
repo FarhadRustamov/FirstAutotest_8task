@@ -81,9 +81,6 @@ public class RegistrationPage extends AbsBasePage<RegistrationPage> {
         }
         int levelNumber;
         switch (langLevel) {
-            case NOT_SELECTED:
-                levelNumber = 0;
-                break;
             case BEGINNER:
                 levelNumber = 1;
                 break;
