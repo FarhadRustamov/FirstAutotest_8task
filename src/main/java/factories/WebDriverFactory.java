@@ -35,7 +35,7 @@ public class WebDriverFactory {
         return webDriver;
     }
 
-    public WebDriver getLocalDriver() {
+    private WebDriver getLocalDriver() {
         logger.trace("Invoke of the getLocalDriver method");
         WebDriver webDriver;
         switch (BROWSER_NAME.trim().toLowerCase()) {
@@ -56,7 +56,7 @@ public class WebDriverFactory {
         return webDriver;
     }
 
-    public WebDriver getRemoteDriver() {
+    private WebDriver getRemoteDriver() {
         logger.trace("Invoke of the getRemoteDriver method");
         try {
             logger.trace("Exiting the getRemoteDriver method");
